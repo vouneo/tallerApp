@@ -1,59 +1,58 @@
-<div class="max-w-6xl mx-auto p-4 space-y-6">
-  <!-- 🔍 Buscador -->
-  <div class="flex justify-between items-center">
-    <h1 class="text-3xl font-bold">Trabajos</h1>
-    <%= link_to "+ Nuevo Trabajo", new_trabajo_path, class: "btn btn-primary" %>
+<!-- Contenedor general -->
+<div class="space-y-8">
+
+  <!-- Contenedor buscador + nuevo trabajo -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-base-200 p-4 rounded-box">
+    <%= form_tag trabajos_path, method: :get, class: "w-full md:max-w-md" do %>
+      <input type="text" name="query" placeholder="Buscar por número, cliente o tipo..." value="<%= params[:query] %>" class="input input-bordered w-full" />
+    <% end %>
+
+    <%= link_to "＋ Nuevo Trabajo", new_trabajo_path, class: "btn btn-primary" %>
   </div>
 
-  <div class="form-control">
-    <form method="get" action="<%= trabajos_path %>" class="flex gap-2">
-      <input type="text" name="query" value="<%= params[:query] %>" placeholder="Buscar por N° de trabajo, cliente o tipo…" class="input input-bordered w-full max-w-md" />
-      <button type="submit" class="btn btn-neutral">Buscar</button>
-    </form>
-  </div>
-
-  <!-- 📦 Lista de Clientes con sus trabajos -->
+  <!-- Contenedor de clientes -->
+  
+  <div class="grid grid-cols-2 gap-8 px-4">
   <% @clientes_con_trabajos.each do |cliente| %>
-    <div class="card bg-base-100 shadow-md border border-base-200">
-      <div class="card-body">
-        <h2 class="card-title text-xl"><%= cliente.nombre %></h2>
+    <div class="card bg-base-100 shadow-md border border-base-300 w-full">
+      <div class="card-body p-4">
+          <h2 class="card-title text-lg mb-4"><%= cliente.nombre %></h2>
 
-        <div class="overflow-x-auto rounded-box mt-4">
-          <table class="table table-zebra w-full">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Tipo</th>
-                <th>Características</th>
-                <th>Valor</th>
-                <th>Pagado</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% cliente.trabajos.each do |trabajo| %>
+          <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+            <table class="table table-zebra">
+              <thead>
                 <tr>
-                  <td><%= trabajo.id %></td>
-                  <td><%= trabajo.tipo %></td>
-                  <td><%= trabajo.caracteristicas %></td>
-                  <td>$<%= number_with_delimiter(trabajo.valor) %></td>
-                  <td><%= trabajo.pagado %></td>
-                  <td class="flex gap-2">
-                    <%= link_to "✏️", edit_trabajo_path(trabajo), class: "btn btn-sm btn-outline" %>
-                    <%= link_to "🗑️", trabajo_path(trabajo), method: :delete, data: { confirm: "¿Estás seguro?" }, class: "btn btn-sm btn-error btn-outline" %>
-                  </td>
+                  <th>ID</th>
+                  <th>Tipo</th>
+                  <th>Características</th>
+                  <th>Valor</th>
+                  <th>Pagado</th>
+                  <th>Acciones</th>
                 </tr>
-              <% end %>
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                <% cliente.trabajos.order(created_at: :desc).each do |trabajo| %>
+                  <tr>
+                    <td><%= trabajo.id %></td>
+                    <td><%= trabajo.tipo %></td>
+                    <td><%= trabajo.caracteristicas %></td>
+                    <td>$<%= trabajo.valor %></td>
+                    <td>
+                      <%= button_to (trabajo.pagado ? "✅" : "❌"), toggle_pagado_trabajo_path(trabajo), method: :patch,
+                          class: "btn btn-sm #{trabajo.pagado ? 'btn-primary' : 'btn-secondary'}" %>
+                    </td>
+                    <td class="space-x-1">
+                      <%= link_to "Ver", trabajo_path(trabajo), class: "btn btn-xs btn-outline" %>
+                      <%= link_to "Editar", edit_trabajo_path(trabajo), class: "btn btn-xs btn-accent" %>
+                      <%= button_to "Eliminar", trabajo_path(trabajo), method: :delete, data: { confirm: "¿Estás seguro?" }, class: "btn btn-xs btn-error" %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
-  <% end %>
-
-  <% if @clientes_con_trabajos.empty? %>
-    <div class="alert alert-info mt-6">
-      No se encontraron trabajos para mostrar.
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 </div>

@@ -14,8 +14,14 @@
 
     <!-- Cliente Nombre -->
     <div>
-      <%= form.label :cliente_nombre, "Cliente", class: "block text-sm font-medium" %>
-      <%= form.text_field :cliente_nombre, placeholder: "Nombre del cliente", class: "input input-bordered w-full" %>
+      <div class="form-control">
+  <label class="label">
+    <span class="label-text">Óptica o Cliente</span>
+  </label>
+  <%= form.text_field :cliente_nombre, value: @trabajo.cliente&.nombre, class: "input input-bordered w-full" %>
+</div>
+
+
     </div>
 
     <!-- Tipo -->

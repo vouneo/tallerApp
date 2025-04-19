@@ -29,11 +29,11 @@ class TrabajosController < ApplicationController
 
   # POST /trabajos or /trabajos.json
   def create
-    cliente_nombre = params[:trabajo][:cliente_nombre].to_s.strip.downcase
-    cliente = Cliente.where("LOWER(nombre) = ?", cliente_nombre).first_or_create(nombre: cliente_nombre.titleize)
+    cliente_nombre = trabajo_params[:cliente_nombre]&.strip
+    cliente = Cliente.find_or_create_by(nombre: cliente_nombre) if cliente_nombre.present?
 
     @trabajo = Trabajo.new(trabajo_params.except(:cliente_nombre))
-    @trabajo.cliente = cliente
+    @trabajo.cliente = cliente if cliente
 
     respond_to do |format|
       if @trabajo.save
@@ -46,10 +46,13 @@ class TrabajosController < ApplicationController
     end
   end
 
-  # PATCH/PUT /trabajos/1 or /trabajos/1.json
   def update
+    cliente_nombre = trabajo_params[:cliente_nombre]&.strip
+    cliente = Cliente.find_or_create_by(nombre: cliente_nombre) if cliente_nombre.present?
+
     respond_to do |format|
-      if @trabajo.update(trabajo_params)
+      if @trabajo.update(trabajo_params.except(:cliente_nombre))
+        @trabajo.update(cliente: cliente) if cliente
         format.html { redirect_to @trabajo, notice: "Trabajo modificado exitosamente." }
         format.json { render :show, status: :ok, location: @trabajo }
       else
@@ -58,6 +61,8 @@ class TrabajosController < ApplicationController
       end
     end
   end
+
+
 
   # DELETE /trabajos/1 or /trabajos/1.json
   def destroy
@@ -68,6 +73,13 @@ class TrabajosController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  def toggle_pagado
+    @trabajo = Trabajo.find(params[:id])
+    @trabajo.update(pagado: !@trabajo.pagado)
+    redirect_to trabajos_path, notice: "Estado de pago actualizado."
+  end
+
 
   private
 
