@@ -1,0 +1,22 @@
+<div id="<%= dom_id trabajo %>" class="w-full sm:w-auto my-5 space-y-5">
+  <div>
+    <strong class="block font-medium mb-1">Óptica:</strong>
+    <%= trabajo.tipo %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Tipo:</strong>
+    <%= trabajo.tipo %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Caracteristicas:</strong>
+    <%= trabajo.caracteristicas %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Valor:</strong>
+    <%= trabajo.valor %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Pagado:</strong>
+    <%= trabajo.pagado? ? "Yes" : "No" %>
+  </div>
+</div>

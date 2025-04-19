@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  tipo: MyString
+  caracteristicas: MyString
+  valor: 9.99
+  pagado: false
+
+two:
+  tipo: MyString
+  caracteristicas: MyString
+  valor: 9.99
+  pagado: false

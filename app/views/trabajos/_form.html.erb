@@ -1,0 +1,51 @@
+<%= form_with(model: trabajo, local: true) do |form| %>
+  <% if trabajo.errors.any? %>
+    <div class="alert alert-error">
+      <h2><%= pluralize(trabajo.errors.count, "error") %> prohibieron guardar el trabajo:</h2>
+      <ul>
+        <% trabajo.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="space-y-4">
+
+    <!-- Cliente Nombre -->
+    <div>
+      <%= form.label :cliente_nombre, "Cliente", class: "block text-sm font-medium" %>
+      <%= form.text_field :cliente_nombre, placeholder: "Nombre del cliente", class: "input input-bordered w-full" %>
+    </div>
+
+    <!-- Tipo -->
+    <div>
+      <%= form.label :tipo, class: "block text-sm font-medium" %>
+      <%= form.text_field :tipo, class: "input input-bordered w-full" %>
+    </div>
+
+    <!-- Características -->
+    <div>
+      <%= form.label :caracteristicas, class: "block text-sm font-medium" %>
+      <%= form.text_field :caracteristicas, class: "input input-bordered w-full" %>
+    </div>
+
+    <!-- Valor -->
+    <div>
+      <%= form.label :valor, class: "block text-sm font-medium" %>
+      <%= form.number_field :valor, class: "input input-bordered w-full" %>
+    </div>
+
+    <!-- Pagado -->
+    <div>
+      <%= form.label :pagado, "¿Pagado?", class: "block text-sm font-medium" %>
+      <%= form.select :pagado, [["Sí", true], ["No", false]], {}, class: "select select-bordered w-full" %>
+    </div>
+
+    <!-- Botón Guardar -->
+    <div>
+      <%= form.submit "Guardar Trabajo", class: "btn btn-primary w-full" %>
+    </div>
+
+  </div>
+<% end %>
